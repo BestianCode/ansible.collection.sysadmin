@@ -25,10 +25,5 @@ jobs:
           python-version: '3.x'
       - run: pip install ansible
       - run: |
-          find . -name 'galaxy.yml' -print0 | while IFS= read -r -d '' file; do
-            dir=$(dirname "$file")
-            cd "$dir"
-            ansible-galaxy collection build
-            ansible-galaxy collection publish --token ${{ env.ANSIBLE_GALAXY_TOKEN }} *.tar.gz
-            cd -
-          done
+          ansible-galaxy collection build
+          ansible-galaxy collection publish --token ${{ env.ANSIBLE_GALAXY_TOKEN }} *.tar.gz
