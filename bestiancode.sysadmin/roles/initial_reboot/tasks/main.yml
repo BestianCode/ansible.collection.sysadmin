@@ -11,8 +11,8 @@
       content: ""
       dest: /var/spool/initial.reboot.done
       force: false
-      group: root
-      owner: "{{rootGroup}}"
+      group: "{{rootGroup}}"
+      owner: root
       mode: '0444'
 
   - name: Restart server if the initial reboot flag does not exist
