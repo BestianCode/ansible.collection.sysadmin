@@ -1,9 +1,7 @@
 name: Push to Galaxy
 
-env:
-  ANSIBLE_GALAXY_TOKEN: ${{ secrets.ANSIBLE_GALAXY_TOKEN }}
-
 on:
+  workflow_dispatch:
   release:
     types: [published]
 
@@ -28,6 +26,8 @@ jobs:
             dir=$(dirname "$file")
             cd "$dir"
             ansible-galaxy collection build
-            ansible-galaxy collection publish -t ${{ env.ANSIBLE_GALAXY_TOKEN }} *.tar.gz
+            ansible-galaxy collection publish -t $ANSIBLE_GALAXY_TOKEN *.tar.gz
             cd -
           done
+        env:
+          ANSIBLE_GALAXY_TOKEN: ${{ secrets.ANSIBLE_GALAXY_TOKEN }}
