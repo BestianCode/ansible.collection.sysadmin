@@ -1,0 +1,93 @@
+---
+
+- name: Check if managerName is defined or sshPermitRootLogin is not 'no'
+  assert:
+    that:
+      - managerName is defined or sshPermitRootLogin != 'no'
+    fail_msg: "Playbook execution stopped: managerName is not defined and sshPermitRootLogin is set to 'no'. You can lose access to the server."
+
+- name: Deploy templates
+  template:
+    src: "{{item.src}}"
+    dest: "{{item.dest}}"
+    mode: "{{item.mode}}"
+    owner: "{{item.owner}}"
+    group: "{{item.group}}"
+    decrypt: "{{item.decrypt}}"
+  with_items:
+    - { src: "sudoers.j2",         dest: "{{etcDirectory}}/sudoers",              mode: "0440", owner: "root", group: "{{rootGroup}}", decrypt: "no" }
+    - { src: "sudoers.manager.j2", dest: "{{etcDirectory}}/sudoers.d/10-manager", mode: "0440", owner: "root", group: "{{rootGroup}}", decrypt: "no" }
+    - { src: "sshd_config.j2",     dest: "{{etcDirectory}}/ssh/sshd_config",      mode: "0644", owner: "root", group: "{{rootGroup}}", decrypt: "no" }
+
+- name: Create manager user group
+  group:
+    name: "{{managerGroup}}"
+    system: no
+    gid: "{{managerGID}}"
+    state: present
+  when: managerGroup is defined and managerGID is defined
+
+- name: Create sudo group
+  group:
+    name: sudo
+    system: no
+    gid: 27
+    state: present
+  when: ansible_os_family == 'FreeBSD'
+
+- name: Create manager user
+  user:
+    name: "{{managerName}}"
+    uid: "{{managerUID}}"
+    group: "{{managerGroup}}"
+    home: "{{usersHomeFolder}}/{{managerName}}"
+    shell: "{{usersDefShell}}"
+    state: present
+  when: managerName is defined and managerUID is defined
+
+- name: Correct permissions for manager's home folder
+  command: chown -R "{{managerName}}:{{managerGroup}}" "{{usersHomeFolder}}/{{managerName}}"
+  changed_when: false
+  when: managerName is defined and managerGroup is defined
+
+- name: Install authorized_keys for manager user
+  authorized_key:
+    user: "{{managerName}}"
+    key: "{{ manager_ssh_keys }}"
+    exclusive: yes
+  when: manager_ssh_keys and managerName is defined
+
+- name: Install authorized_keys for root user
+  authorized_key:
+    user: root
+    key: "{{ root_ssh_keys }}"
+    exclusive: yes
+  when: root_ssh_keys is defined
+
+- name: Add manager user to group 'root/wheel'
+  user:
+    name: "{{managerName}}"
+    append: yes
+    groups: "{{rootGroup}}"
+    create_home: no
+  when: managerName is defined
+
+- name: Add manager user to group 'sudo'
+  user:
+    name: "{{managerName}}"
+    append: yes
+    groups: sudo
+    create_home: no
+  when: managerName is defined
+
+- name: Restart ssh server
+  ansible.builtin.service:
+    name: "{{sshServiceName}}"
+    state: restarted
+
+- name: Check ssh server status
+  shell: service "{{sshServiceName}}" status
+  register: sOut
+
+- debug:
+    var: sOut.stdout_lines

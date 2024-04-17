@@ -1,0 +1,33 @@
+---
+# defaults file for initial_setup
+
+etcDirectory: /etc
+# FreeBSD: /usr/local/etc
+rootGroup: root
+# FreeBSD: wheel
+usersHomeFolder: /home
+# FreeBSD: /usr/home
+usersDefShell: /bin/bash
+# FreeBSD: /bin/csh
+sshServiceName: ssh
+# FreeBSD: sshd
+
+sshPort: 22
+sshPermitRootLogin: "no"
+#ssh_listen_addresses:
+#  - 0.0.0.0
+#  - 0.0.0.0:22
+#  - 192.168.1.1:32145
+
+managerName: admin
+managerGroup: admin
+managerGID: 1001
+managerUID: 1001
+
+manager_ssh_keys: |
+  ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIETHYQaEzZ/1ThEMdewhwkffTMBtw+hkqd4gut4Oze9l manager@ed.host
+#  ssh-rsa AAAAB... manager@rsa.host
+
+root_ssh_keys: |
+  ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIETHYQaEzZ/1ThEMdewhwkffTMBtw+hkqd4gut4Oze9l root@ed.host
+#  ssh-rsa AAAAB... manager@rsa.host

@@ -1,0 +1,50 @@
+#!/bin/bash
+# ====================
+# Managed by Ansible
+# ====================
+
+scripts=(
+  "/root/sbin/iptables.sh"
+  "/root/sbin/network.sh"
+  "/root/sbin/startup.sh"
+)
+
+truncate -s 0 /var/log/rc.local.log
+
+for script in "${scripts[@]}"; do
+  if [ -f "$script" ]; then
+    "$script" >> /var/log/rc.local.log
+  fi
+done
+{% if looppoint_int is defined and looppoint_int_ip is defined and looppoint_int_mask is defined %}
+
+ifconfig {{looppoint_int}} inet {{looppoint_int_ip}} netmask {{looppoint_int_mask}}
+
+{% endif %}
+{% if dhcp_int is defined %}
+
+/sbin/dhclient -4 -v -i -pf /run/dhclient.{{dhcp_int}}.pid -lf /var/lib/dhcp/dhclient.{{dhcp_int}}.leases -I -df /var/lib/dhcp/dhclient6.{{dhcp_int}}.leases {{dhcp_int}}
+{% endif %}
+{% if int_vlan is defined and int_mtu is defined %}
+
+ip link add link {{ansible_default_ipv4.interface}} name {{ansible_default_ipv4.interface}}.{{int_vlan}} type vlan id {{int_vlan}}
+ip link set {{ansible_default_ipv4.interface}}.{{int_vlan}} mtu {{int_mtu}}
+ip link set dev {{ansible_default_ipv4.interface}}.{{int_vlan}} up
+{% endif %}
+{% if lan_net is defined and lan_net_full is defined and int_gw_last_octet is defined and lan_ip_last_octet is defined %}
+{% if int_vlan is defined %}
+
+ip addr add {{lan_net}}.{{lan_ip_last_octet}}/24 dev {{ansible_default_ipv4.interface}}.{{int_vlan}}
+{% else %}
+ip addr add {{lan_net}}.{{lan_ip_last_octet}}/24 dev {{ansible_default_ipv4.interface}}
+{% endif %}
+ip route add {{lan_net_full}} via {{lan_net}}.{{int_gw_last_octet}}
+{% endif %}
+{% if rc_local_extra_commands is defined %}
+
+{{rc_local_extra_commands}}
+{% endif %}
+
+# ====================
+# Managed by Ansible
+# ====================

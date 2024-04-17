@@ -1,0 +1,93 @@
+---
+# defaults file for initial_setup
+
+etcDirectory: /etc
+# FreeBSD: /usr/local/etc
+rootGroup: root
+# FreeBSD: wheel
+
+# rc.local extra commands
+#rc_local_extra_commands: "sleep 30 && /bin/bash /home/app/vm/screen.sh &"
+
+# loopback interface
+#looppoint_int: lo:10
+#looppoint_int_ip: 10.254.254.254
+#looppoint_int_mask: 255.255.255.255
+
+# force to run dhcp on interface
+#dhcp_int: eth0
+
+# vlan interface
+#int_vlan: 4000
+#int_mtu: 1400
+
+# full vlan network
+#lan_net_full: "192.168.0.0/16"
+# local vlan network
+#lan_net: 192.168.1
+
+# gateway last octet
+#int_gw_last_octet: 1
+
+# per vm last octet
+#lan_ip_last_octet: 11
+
+os_default_packages:
+  - python3
+  - mc
+  - screen
+  - tcpdump
+  - nmap
+  - psmisc
+  - whois
+  - curl
+  - vim
+  - sudo
+  - ntp
+  - bash
+  - bash-completion
+  - nload
+  - tcptrack
+  - iftop
+  - groff
+  - jq
+  - locales-all
+  - aptitude
+  - telnet
+  - traceroute
+  - dnsutils
+  - ethtool
+  - dsniff
+  - apt-transport-https
+  - ca-certificates
+  - software-properties-common
+  - man
+  - gnupg-agent
+  - dstat
+  - net-tools
+  - bsd-mailx
+  - unattended-upgrades
+
+# FreeBSD
+#os_default_packages:
+#  - python3
+#  - mc
+#  - screen
+#  - tcpdump
+#  - nmap
+#  - psmisc
+#  - whois
+#  - curl
+#  - vim
+#  - sudo
+#  - ntp
+#  - bash
+#  - bash-completion
+#  - nload
+#  - tcptrack
+#  - iftop
+#  - groff
+
+os_directories_to_create:
+  - /root/bin
+  - /root/sbin

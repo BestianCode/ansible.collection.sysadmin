@@ -1,0 +1,20 @@
+---
+
+- name: Check for the initial reboot flag
+  ansible.builtin.stat:
+    path: /var/spool/initial.reboot.done
+  register: initial_reboot_done
+
+- block:
+  - name: Create the initial reboot flag
+    ansible.builtin.copy:
+      content: ""
+      dest: /var/spool/initial.reboot.done
+      force: false
+      group: root
+      owner: root
+      mode: '0444'
+
+  - name: Restart server if the initial reboot flag does not exist
+    ansible.builtin.reboot:
+  when: not initial_reboot_done.stat.exists

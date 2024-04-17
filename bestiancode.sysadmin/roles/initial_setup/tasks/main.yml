@@ -1,0 +1,58 @@
+---
+
+- name: Create directories
+  file:
+    path: "{{ item }}"
+    state: directory
+    owner: root
+    group: root
+    mode: 0700
+  loop: "{{ os_directories_to_create }}"
+
+- name: Update apt cache
+  apt:
+    update_cache: yes
+    cache_valid_time: 60
+  when: ansible_os_family in ['Debian', 'Ubuntu']
+
+- name: Check for the initial reboot flag
+  ansible.builtin.stat:
+    path: /var/spool/initial.reboot.done
+  register: initial_reboot_done
+
+- name: Upgrade linux packages
+  apt:
+    upgrade: "yes"
+    update_cache: yes
+    cache_valid_time: 60
+  when: not initial_reboot_done.stat.exists and ansible_os_family in ['Debian', 'Ubuntu']
+
+- name: Install packages
+  ansible.builtin.package:
+    name: "{{ os_default_packages }}"
+    state: present
+    autoremove: yes
+
+- name: Clean apt
+  apt:
+    autoremove: yes
+    purge: yes
+  when: ansible_os_family in ['Debian', 'Ubuntu']
+
+- name: Manage exim4 service
+  systemd:
+    name: exim4
+    state: stopped
+    enabled: no
+  ignore_errors: true
+
+- name: Deploy templates
+  template:
+    src: "{{item.src}}"
+    dest: "{{item.dest}}"
+    mode: "{{item.mode}}"
+    owner: "{{item.owner}}"
+    group: "{{item.group}}"
+    decrypt: "{{item.decrypt}}"
+  with_items:
+    - { src: "rc.local.j2", dest: "{{etcDirectory}}/rc.local", mode: "0755", owner: "root", group: "{{rootGroup}}", decrypt: "no" }
