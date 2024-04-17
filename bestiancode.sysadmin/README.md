@@ -1,29 +1,25 @@
-# Ansible Collection for FreeBSD and Debian(Ubuntu)
+# Ansible Collection for FreeBSD and Debian (Ubuntu)
 
-This collection provides a set of Ansible roles designed for configuring and managing Linux servers. While the primary focus is on Debian(Ubuntu) distribution, these roles may not be applicable to other Linux distributions.
-
-In addition to Linux, these roles are being adapted to manage FreeBSD servers, because I still use FreeBSD and there are not so much roles for it in the world.
+This Ansible collection provides a set of roles designed for configuring and managing FreeBSD and Debian (Ubuntu) servers. While the primary focus is on Debian (Ubuntu), these roles may not be applicable to other Linux distributions.
 
 ## Installation
 
-* To install the collection, you can use the `ansible-galaxy` command:
+You can install this collection using the `ansible-galaxy` command:
 
 ```bash
 ansible-galaxy collection install bestiancode.sysadmin
 ```
 
-* Also requirements file for all list of collections can be created and used for installng all collections and roles at once:
+Alternatively, you can create a `requirements.yml` file and use it to install all collections and roles at once:
 
 ```bash
 ansible-galaxy collection install -r requirements.yml --force
 ansible-galaxy role install -r requirements.yml --force
 ```
 
-* Sample `requirements.yml` file:
+Here's a sample `requirements.yml` file:
 
 ```yaml
----
-
 collections:
   - name: bestiancode.sysadmin
 
@@ -32,11 +28,11 @@ roles:
   - name: newrelic.newrelic_install
 ```
 
-## Samples
+## Usage
 
-* **First, look at default variables in roles!**
+**Before using these roles, make sure to look at the default variables!**
 
-* Sample `inventory`:
+Here's a sample `inventory`:
 
 ```ini
 managerName: admin
@@ -53,7 +49,7 @@ root_ssh_keys: |
   ssh-ed25519 AAAAC... root@ed.host
 ```
 
-* Sample `playbook`:
+And a sample `playbook`:
 
 ```yaml
 - hosts:
@@ -65,6 +61,7 @@ root_ssh_keys: |
   roles:
     # If collections are not defined here, it is mandatory to specify prefix bestiancode.sysadmin!
     - bestiancode.sysadmin.initial_setup
+    # Add other roles here
 
 - hosts:
     - all
@@ -78,8 +75,10 @@ root_ssh_keys: |
   roles:
     # If you defined collections, prefix bestiancode.sysadmin is not needed.
     - auth_ssh_manager
+    # Add other roles here
+
 ...
- - other roles here
+ - other constructions can be here
 ...
 
 - hosts:
@@ -93,4 +92,5 @@ root_ssh_keys: |
     - bestiancode.sysadmin
   roles:
     - initial_reboot
+    # Add other roles here
 ```
