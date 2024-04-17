@@ -77,9 +77,9 @@ And a sample `playbook`:
     - auth_ssh_manager
     # Add other roles here
 
-...
- - other constructions can be here
-...
+#...
+# - other constructions can be here
+#...
 
 - hosts:
     - all
@@ -94,3 +94,8 @@ And a sample `playbook`:
     - initial_reboot
     # Add other roles here
 ```
+
+## URLs
+
+- **GitHub**: https://github.com/BestianCode/ansible.collection.sysadmin
+- **Galaxy**: https://galaxy.ansible.com/ui/repo/published/bestiancode/sysadmin

@@ -17,7 +17,8 @@
   with_items:
     - { src: "sudoers.j2",         dest: "{{etcDirectory}}/sudoers",              mode: "0440", owner: "root", group: "{{rootGroup}}", decrypt: "no" }
     - { src: "sudoers.manager.j2", dest: "{{etcDirectory}}/sudoers.d/10-manager", mode: "0440", owner: "root", group: "{{rootGroup}}", decrypt: "no" }
-    - { src: "sshd_config.j2",     dest: "{{etcDirectory}}/ssh/sshd_config",      mode: "0644", owner: "root", group: "{{rootGroup}}", decrypt: "no" }
+    # ssh configs are usually installed by default to /etc on Linux and FreeBSD
+    - { src: "sshd_config.j2",     dest: "/etc/ssh/sshd_config",      mode: "0644", owner: "root", group: "{{rootGroup}}", decrypt: "no" }
 
 - name: Create manager user group
   group:

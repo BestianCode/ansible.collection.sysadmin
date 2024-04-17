@@ -1,0 +1,25 @@
+---
+
+- name: Update FreeBSD pagng
+  shell: pkg update
+  register: sOut
+
+- name: Update FreeBSD pagng output...
+  debug:
+    var: sOut.stdout_lines
+
+- name: Upgrade FreeBSD packages
+  shell: pkg upgrade -y
+  register: sOut
+  when: not initial_reboot_done.stat.exists
+
+- name: Upgrade FreeBSD packages output...
+  debug:
+    var: sOut.stdout_lines
+  when: not initial_reboot_done.stat.exists
+
+- name: Install packages
+  ansible.builtin.package:
+    name: "{{ os_default_packages_freebsd }}"
+    state: present
+    autoremove: yes

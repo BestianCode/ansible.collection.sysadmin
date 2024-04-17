@@ -1,0 +1,33 @@
+---
+
+- name: Update apt cache
+  apt:
+    update_cache: yes
+    cache_valid_time: 60
+  when: ansible_os_family in ['Debian', 'Ubuntu']
+
+- name: Upgrade linux packages
+  apt:
+    upgrade: "yes"
+    update_cache: yes
+    cache_valid_time: 60
+  when: not initial_reboot_done.stat.exists and ansible_os_family in ['Debian', 'Ubuntu']
+
+- name: Install packages
+  ansible.builtin.package:
+    name: "{{ os_default_packages_linux }}"
+    state: present
+    autoremove: yes
+
+- name: Clean apt
+  apt:
+    autoremove: yes
+    purge: yes
+  when: ansible_os_family in ['Debian', 'Ubuntu']
+
+- name: Disable exim4 service
+  systemd:
+    name: exim4
+    state: stopped
+    enabled: no
+  ignore_errors: true

@@ -32,7 +32,7 @@ rootGroup: root
 # per vm last octet
 #lan_ip_last_octet: 11
 
-os_default_packages:
+os_default_packages_linux:
   - python3
   - mc
   - screen
@@ -68,25 +68,24 @@ os_default_packages:
   - bsd-mailx
   - unattended-upgrades
 
-# FreeBSD
-#os_default_packages:
-#  - python3
-#  - mc
-#  - screen
-#  - tcpdump
-#  - nmap
-#  - psmisc
-#  - whois
-#  - curl
-#  - vim
-#  - sudo
-#  - ntp
-#  - bash
-#  - bash-completion
-#  - nload
-#  - tcptrack
-#  - iftop
-#  - groff
+os_default_packages_freebsd:
+  - python3
+  - mc
+  - screen
+  - tcpdump
+  - nmap
+  - psmisc
+  - whois
+  - curl
+  - vim
+  - sudo
+  - ntp
+  - bash
+  - bash-completion
+  - nload
+  - tcptrack
+  - iftop
+  - groff
 
 os_directories_to_create:
   - /root/bin

@@ -1,8 +1,13 @@
+{% if ansible_os_family == 'Debian' or ansible_os_family == 'Ubuntu' %}
 #!/bin/bash
+{% else %}
+#!/bin/sh
+{% endif %}
 # ====================
 # Managed by Ansible
 # ====================
 
+{% if ansible_os_family == 'Debian' or ansible_os_family == 'Ubuntu' %}
 scripts=(
   "/root/sbin/iptables.sh"
   "/root/sbin/network.sh"
@@ -43,6 +48,11 @@ ip route add {{lan_net_full}} via {{lan_net}}.{{int_gw_last_octet}}
 {% if rc_local_extra_commands is defined %}
 
 {{rc_local_extra_commands}}
+{% endif %}
+{% else %}
+/etc/rc.d/ntpd stop
+ntpdate 0.freebsd.pool.ntp.org
+/etc/rc.d/ntpd start
 {% endif %}
 
 # ====================
