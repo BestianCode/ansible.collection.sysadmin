@@ -1,0 +1,14 @@
+---
+# defaults file for disk_format
+
+disks_to_format:
+  - device: /dev/sdx
+    pnumber: 1
+    part_start: 0%
+    part_end: 100%
+    resize: true
+    pname: data           # Partiton name/label /dev/disk/by-partlabel/...
+    label: gpt
+    fs: ext4
+    mount_point: /data
+    mount_opts: defaults

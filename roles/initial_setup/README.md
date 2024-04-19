@@ -10,4 +10,4 @@ The creation of the flag file `/var/spool/initial.reboot.done` is handled by the
 
 ## Default Variables
 
-For more information on default variables, please refer to the `defaults/main.yml` file.
+For a comprehensive understanding of default variables, please refer to the `defaults/main.yml` file.

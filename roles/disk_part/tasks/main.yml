@@ -1,0 +1,48 @@
+---
+
+- name: Get partition information
+  community.general.parted:
+    device: "{{ item.device }}"
+    state: info
+  register: parted_info
+  with_items:
+  - "{{ disks_to_format }}"
+  when: disks_to_format is defined
+
+- name: Create partitions
+  community.general.parted:
+    device: "{{ item.device }}"
+    number: "{{ item.pnumber }}"
+    part_start: "{{ item.part_start }}"
+    part_end: "{{ item.part_end }}"
+    resize: "{{ item.resize }}"
+    label: "{{ item.label }}"
+    name: "{{ item.pname }}"
+    state: present
+    fs_type: "{{ item.fs }}"
+  with_items:
+  - "{{ disks_to_format }}"
+  when:
+    - disks_to_format is defined
+    - item.pname not in (parted_info.results | map(attribute='partitions') | list | flatten | map(attribute='name') | list)
+
+- name: Create a ext4 filesystems
+  community.general.filesystem:
+    dev: "/dev/disk/by-partlabel/{{ item.pname }}"
+    fstype: "{{item.fs}}"
+    resizefs: "{{item.resize}}"
+    state: present
+  with_items:
+  - "{{ disks_to_format }}"
+  when: disks_to_format is defined
+
+- name: Mount partitions
+  ansible.posix.mount:
+    src: "/dev/disk/by-partlabel/{{ item.pname }}"
+    path: "{{ item.mount_point }}"
+    fstype: "{{ item.fs }}"
+    opts: "{{ item.mount_opts }}"
+    state: mounted
+  with_items:
+  - "{{ disks_to_format }}"
+  when: disks_to_format is defined
