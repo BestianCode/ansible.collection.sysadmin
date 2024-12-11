@@ -33,6 +33,9 @@ rootGroup: root
 #lan_ip_last_octet: 11
 
 os_default_packages_linux:
+  - unzip
+  - wget
+  - tmux
   - python3
   - mc
   - screen
@@ -76,6 +79,9 @@ os_default_packages_freebsd:
   - nmap
   - psmisc
   - whois
+  - unzip
+  - wget
+  - tmux
   - curl
   - vim
   - sudo
