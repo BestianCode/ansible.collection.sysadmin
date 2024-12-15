@@ -33,6 +33,7 @@ rootGroup: root
 #lan_ip_last_octet: 11
 
 os_default_packages_linux:
+  - apparmor
   - btop
   - unzip
   - wget
