@@ -73,7 +73,9 @@ os_default_packages_linux:
   - bsd-mailx
   - unattended-upgrades
 
-os_default_packages_freebsd:
+os_default_packages_freebsd:\
+  - btop
+  - jq
   - python3
   - mc
   - screen
