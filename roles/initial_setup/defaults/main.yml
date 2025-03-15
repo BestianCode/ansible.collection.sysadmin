@@ -72,6 +72,7 @@ os_default_packages_linux:
   - net-tools
   - bsd-mailx
   - unattended-upgrades
+  - cron
 
 os_default_packages_freebsd:\
   - btop
