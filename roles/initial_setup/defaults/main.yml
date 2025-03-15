@@ -74,7 +74,7 @@ os_default_packages_linux:
   - unattended-upgrades
   - cron
 
-os_default_packages_freebsd:\
+os_default_packages_freebsd:
   - btop
   - jq
   - python3
