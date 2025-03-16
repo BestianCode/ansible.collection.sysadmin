@@ -6,7 +6,7 @@
     state: directory
     owner: root
     group: "{{rootGroup}}"
-    mode: 0700
+    mode: 0755
   loop: "{{ os_directories_to_create }}"
 
 - name: Check for the initial reboot flag
