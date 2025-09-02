@@ -1,0 +1,5 @@
+---
+# defaults file for initial_reboot
+
+rootGroup: root
+# FreeBSD: wheel
