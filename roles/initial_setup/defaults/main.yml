@@ -64,7 +64,6 @@ os_default_packages_linux:
   - dsniff
   - apt-transport-https
   - ca-certificates
-  - software-properties-common
   - man
   - gnupg-agent
   - dstat
