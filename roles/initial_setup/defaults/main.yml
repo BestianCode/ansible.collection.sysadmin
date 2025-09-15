@@ -48,7 +48,6 @@ os_default_packages_linux:
   - curl
   - vim
   - sudo
-  - ntp
   - bash
   - bash-completion
   - nload
