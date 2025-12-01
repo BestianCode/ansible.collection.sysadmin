@@ -31,3 +31,15 @@ manager_ssh_keys: |
 root_ssh_keys: |
   ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIETHYQaEzZ/1ThEMdewhwkffTMBtw+hkqd4gut4Oze9l root@ed.host
 #  ssh-rsa AAAAB... manager@rsa.host
+
+ssh_custom_rules: []
+#  - match: User proxyuser
+#    rules:
+#      - PasswordAuthentication no
+#      - PubkeyAuthentication yes
+#      - AllowTcpForwarding yes
+#      - PermitOpen 127.0.0.1:8443 127.0.0.1:587
+#      - X11Forwarding no
+#      - AllowAgentForwarding no
+#      - PermitTTY no
+#      - ForceCommand /bin/false

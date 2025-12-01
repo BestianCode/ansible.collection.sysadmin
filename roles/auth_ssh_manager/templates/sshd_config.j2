@@ -131,3 +131,12 @@ Subsystem   sftp    /usr/lib/openssh/sftp-server
 #       AllowTcpForwarding no
 #       PermitTTY no
 #       ForceCommand cvs server
+
+{% if ssh_custom_rules is defined %}
+{% for rule in ssh_custom_rules %}
+Match {{ rule.match }}
+{% for option in rule.rules %}
+    {{ option }}
+{% endfor %}
+{% endfor %}
+{% endif %}

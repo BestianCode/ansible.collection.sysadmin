@@ -1,0 +1,83 @@
+---
+
+- name: Manage user accounts
+  ansible.builtin.user:
+    name: "{{ item.username }}"
+    comment: "{{ item.fullname | default('Managed by Ansible') }}"
+    uid: "{{ item.uid | default(omit) }}"
+    groups: "{{ item.groups | join(',') if item.groups is defined else omit }}"
+    # append: no # Default is no, which means groups will be set exactly to the list provided (plus primary group)
+    shell: "{{ item.shell | default('/bin/bash') }}"
+    home: "{{ item.home_root | default('/home/' + item.username) }}"
+    create_home: true
+    state: "{{ item.state | default('present') }}"
+    remove: "{{ 'yes' if (item.state | default('present')) == 'absent' else 'no' }}"
+  loop: "{{ ssh_users_list }}"
+  loop_control:
+    label: "{{ item.username }}"
+
+- name: Ensure .ssh directory exists with secure permissions
+  ansible.builtin.file:
+    path: "{{ item.home_root | default('/home/' + item.username) }}/.ssh"
+    state: directory
+    owner: "{{ item.username }}"
+    group: "{{ item.username }}"
+    mode: '0700'
+  loop: "{{ ssh_users_list }}"
+  loop_control:
+    label: "{{ item.username }}"
+  when: (item.state | default('present')) == 'present'
+
+- name: Manage SSH private keys
+  ansible.builtin.copy:
+    dest: "{{ item.0.home_root | default('/home/' + item.0.username) }}/.ssh/{{ item.1.key_name }}"
+    content: "{{ item.1.key_content }}"
+    owner: "{{ item.0.username }}"
+    group: "{{ item.0.username }}"
+    mode: '0600'
+    decrypt: true
+  loop: "{{ ssh_users_list | subelements('ssh_private_keys', skip_missing=True) }}"
+  loop_control:
+    label: "{{ item.0.username }} - {{ item.1.key_name }}"
+  when: (item.0.state | default('present')) == 'present'
+  no_log: true
+
+- name: Manage SSH authorized keys
+  ansible.posix.authorized_key:
+    user: "{{ item.username }}"
+    key: "{{ item.ssh_authorized_keys | join('\n') }}"
+    state: present
+    exclusive: true
+  loop: "{{ ssh_users_list }}"
+  loop_control:
+    label: "{{ item.username }}"
+  when:
+    - (item.state | default('present')) == 'present'
+    - item.ssh_authorized_keys is defined
+
+- name: Manage sudoers configuration for user
+  ansible.builtin.copy:
+    dest: "/etc/sudoers.d/{{ item.username }}"
+    content: |
+      {% for cmd in item.sudo_commands %}
+      {{ item.username }} ALL=({{ cmd.run_as | default('root') }}) {{ 'NOPASSWD:' if cmd.nopasswd | default(true) else 'PASSWD:' }} {{ cmd.command }}
+      {% endfor %}
+    mode: '0440'
+    validate: 'visudo -cf %s'
+  loop: "{{ ssh_users_list }}"
+  loop_control:
+    label: "{{ item.username }}"
+  when:
+    - (item.state | default('present')) == 'present'
+    - item.sudo_commands is defined
+
+- name: Remove sudoers configuration
+  ansible.builtin.file:
+    path: "/etc/sudoers.d/{{ item.username }}"
+    state: absent
+  loop: "{{ ssh_users_list }}"
+  loop_control:
+    label: "{{ item.username }}"
+  when: >
+    (item.state | default('present')) == 'absent' or
+    item.sudo_commands is not defined

@@ -1,0 +1,26 @@
+---
+
+ssh_users_list: []
+#  - username: app        # Required
+#    fullname: App user   # Optional, defaults to 'Managed by Ansible'
+#    home_root: /home/app # Optional, defaults to /home/${username}
+#    shell: /bin/bash     # Optional, defaults to /bin/bash
+#    uid: 1001            # Optional
+#    groups:              # Optional
+#      - sudo
+#      - docker
+#      - root
+#    sudo_commands:       # Optional
+#      - command: /usr/bin/systemctl restart nginx
+#        run_as: root     # Optional, defaults to root
+#        nopasswd: yes    # Optional, defaults to yes
+#    ssh_authorized_keys: # Optional
+#      - "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCy..."
+#      - "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQC7..."
+#    ssh_private_keys:    # Optional
+#      - key_name: id_rsa
+#        key_content: |
+#          -----BEGIN OPENSSH PRIVATE KEY-----
+#          ...
+#          -----END OPENSSH PRIVATE KEY-----
+#    state: present       # Optional, defaults to present
