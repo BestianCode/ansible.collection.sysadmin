@@ -1,6 +1,6 @@
 galaxy_info:
   author: Oleg Smirnov
-  description: SSH Users Management Role
+  description: SSH Users/keys management role
 
   # If the issue tracker for your role is not on github, uncomment the
   # next line and provide a value
