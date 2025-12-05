@@ -1,0 +1,43 @@
+---
+
+- name: Configure iptables
+  when: ansible_os_family not in ['FreeBSD']
+  block:
+    - name: Install iptables package
+      ansible.builtin.package:
+        name: iptables
+        state: present
+
+    - name: Deploy iptables.sh
+      ansible.builtin.template:
+        src: iptables.sh.j2
+        dest: /root/sbin/iptables.sh
+        mode: "0755"
+        owner: root
+        group: "{{ rootGroup }}"
+
+    - name: Apply iptables rules
+      ansible.builtin.command: /root/sbin/iptables.sh
+      changed_when: false
+      register: iptables_result
+
+    - name: Show iptables output
+      ansible.builtin.debug:
+        var: iptables_result.stdout_lines
+      when: iptables_result.stdout_lines | length > 0
+
+- name: Deploy network.sh
+  ansible.builtin.template:
+    src: network.sh.j2
+    dest: /root/sbin/network.sh
+    mode: "0755"
+    owner: root
+    group: "{{ rootGroup }}"
+
+- name: Deploy startup.sh
+  ansible.builtin.template:
+    src: startup.sh.j2
+    dest: /root/sbin/startup.sh
+    mode: "0755"
+    owner: root
+    group: "{{ rootGroup }}"

@@ -1,0 +1,67 @@
+---
+
+rootGroup: root
+
+# =============================================================================
+# network.sh configuration
+# =============================================================================
+# Delay before running network commands (seconds)
+# Allows time for network interfaces to be fully ready
+# network_startup_delay: 5
+
+# List of commands to run in network.sh (SSH tunnels, network setup, etc.)
+# Example:
+# network_sh_commands:
+#   - 'su -s /bin/bash tunnel -c "while true; do ssh -N -T -L 127.0.0.1:8443:127.0.0.1:8443 -p 22 tunnel@remote.host; sleep 1; done" &'
+#   - 'ip route add 10.0.0.0/8 via 192.168.1.1'
+network_sh_commands: []
+
+# =============================================================================
+# iptables.sh configuration
+# =============================================================================
+# Zabbix agent port to protect
+zabbix_agent_port: 10050
+
+# Always allowed hosts (IPv4 and IPv6 addresses)
+# IPv4 addresses will use iptables, IPv6 will use ip6tables
+# Example:
+# always_allowed_hosts:
+#   - 192.168.1.100
+#   - 10.0.0.1
+#   - 2001:db8::1
+always_allowed_hosts: []
+
+# Additional iptables rules (raw commands)
+# Example:
+# iptables_extra_rules:
+#   - '${ipt4} -j ACCEPT -A INPUT -p tcp --dport 80 -i ${int}'
+#   - '${ipt4} -j ACCEPT -A INPUT -p tcp --dport 443 -i ${int}'
+iptables_extra_rules: []
+
+# VPN NAT configuration (IPv4 only)
+# Enables MASQUERADE NAT for VPN clients to access external networks
+# Both vpn_network and vpn_bmask must be defined for NAT to be enabled
+# Example:
+# vpn_network: 10.8.0.0
+# vpn_bmask: 24
+
+# =============================================================================
+# startup.sh configuration
+# =============================================================================
+# Sleep delay before running startup scripts (seconds)
+# startup_delay: 5
+
+# List of scripts to execute at startup
+# These will be called in order from startup.sh
+# Example:
+# startup_scripts_to_run:
+#   - "/root/sbin/custom1.sh"
+#   - "/root/sbin/custom2.sh"
+startup_scripts_to_run: []
+
+# Additional startup commands (raw commands to run after scripts)
+# Example:
+# startup_extra_commands:
+#   - 'echo "System started at $(date)" >> /var/log/startup.log'
+#   - 'systemctl restart some-service'
+startup_extra_commands: []
