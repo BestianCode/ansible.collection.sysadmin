@@ -1,0 +1,11 @@
+---
+- name: Deploy sysctl configuration
+  template:
+    src: sysctl.conf.j2
+    dest: /etc/sysctl.d/99-ansible-sysctl.conf
+    owner: root
+    group: "{{ rootGroup }}"
+    mode: '0644'
+
+- name: Apply sysctl
+  command: sysctl -p /etc/sysctl.d/99-ansible-sysctl.conf

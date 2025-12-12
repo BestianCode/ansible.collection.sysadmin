@@ -43,3 +43,6 @@ ssh_custom_rules: []
 #      - AllowAgentForwarding no
 #      - PermitTTY no
 #      - ForceCommand /bin/false
+
+#sshMaxSessions: 10
+#sshMaxStartups: 10:30:100

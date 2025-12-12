@@ -43,7 +43,9 @@ ListenAddress {{ lstring }}
 PermitRootLogin {{sshPermitRootLogin}}
 #StrictModes yes
 #MaxAuthTries 6
-#MaxSessions 10
+{% if sshMaxSessions is defined %}
+MaxSessions {{sshMaxSessions}}
+{% endif %}
 
 #PubkeyAuthentication yes
 
@@ -108,7 +110,9 @@ PrintMotd no
 #ClientAliveCountMax 3
 #UseDNS yes
 #PidFile /var/run/sshd.pid
-#MaxStartups 10:30:100
+{% if sshMaxStartups is defined %}
+MaxStartups {{ sshMaxStartups }}
+{% endif %}
 #PermitTunnel no
 #ChrootDirectory none
 #UseBlacklist no
