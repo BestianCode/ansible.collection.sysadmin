@@ -1,4 +1,4 @@
-{% if ansible_os_family == 'Debian' or ansible_os_family == 'Ubuntu' %}
+{% if ansible_facts['os_family'] == 'Debian' or ansible_facts['os_family'] == 'Ubuntu' %}
 Defaults	env_reset
 Defaults	mail_badpass
 Defaults	secure_path="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
@@ -6,7 +6,7 @@ Defaults	secure_path="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/b
 
 root	ALL=(ALL:ALL) ALL
 %sudo	ALL=(ALL:ALL) ALL
-{% if ansible_os_family == 'FreeBSD' %}
+{% if ansible_facts['os_family'] == 'FreeBSD' %}
 %wheel  ALL=(ALL:ALL) ALL
 {% endif %}
 

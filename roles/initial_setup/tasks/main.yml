@@ -15,10 +15,10 @@
   register: initial_reboot_done
 
 - include_tasks: linux.yml
-  when: ansible_os_family not in ['FreeBSD']
+  when: ansible_facts['os_family'] not in ['FreeBSD']
 
 - include_tasks: freebsd.yml
-  when: ansible_os_family in ['FreeBSD']
+  when: ansible_facts['os_family'] in ['FreeBSD']
 
 - name: Deploy templates
   template:

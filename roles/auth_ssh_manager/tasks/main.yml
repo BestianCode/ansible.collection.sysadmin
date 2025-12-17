@@ -34,7 +34,7 @@
     system: no
     gid: 27
     state: present
-  when: ansible_os_family == 'FreeBSD'
+  when: ansible_facts['os_family'] == 'FreeBSD'
 
 - name: Create manager user
   user:

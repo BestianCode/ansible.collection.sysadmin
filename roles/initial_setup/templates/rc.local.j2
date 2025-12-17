@@ -1,4 +1,4 @@
-{% if ansible_os_family == 'Debian' or ansible_os_family == 'Ubuntu' %}
+{% if ansible_facts['os_family'] == 'Debian' or ansible_facts['os_family'] == 'Ubuntu' %}
 #!/bin/bash
 {% else %}
 #!/bin/sh
@@ -7,7 +7,7 @@
 # Managed by Ansible
 # ====================
 
-{% if ansible_os_family == 'Debian' or ansible_os_family == 'Ubuntu' %}
+{% if ansible_facts['os_family'] == 'Debian' or ansible_facts['os_family'] == 'Ubuntu' %}
 scripts=(
   "/root/sbin/iptables.sh"
   "/root/sbin/network.sh"

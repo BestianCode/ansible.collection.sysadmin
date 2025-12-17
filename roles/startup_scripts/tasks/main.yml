@@ -1,7 +1,7 @@
 ---
 
 - name: Configure iptables
-  when: ansible_os_family not in ['FreeBSD']
+  when: ansible_facts['os_family'] not in ['FreeBSD']
   block:
     - name: Install iptables package
       ansible.builtin.package:

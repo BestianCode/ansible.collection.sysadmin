@@ -122,7 +122,7 @@ MaxStartups {{ sshMaxStartups }}
 #Banner none
 
 # override default of no subsystems
-{% if ansible_os_family == 'FreeBSD' %}
+{% if ansible_facts['os_family'] == 'FreeBSD' %}
 Subsystem   sftp    /usr/libexec/sftp-server
 {% else %}
 AcceptEnv   LANG    LC_*
