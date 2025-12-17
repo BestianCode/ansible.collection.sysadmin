@@ -81,6 +81,23 @@
     create_home: no
   when: managerName is defined
 
+- name: Get list of existing groups on the system
+  getent:
+    database: group
+  when: managerName is defined and managerGroups | length > 0
+
+- name: Add manager user to additional groups (if they exist)
+  user:
+    name: "{{managerName}}"
+    append: yes
+    groups: "{{ item }}"
+    create_home: no
+  loop: "{{ managerGroups }}"
+  when:
+    - managerName is defined
+    - managerGroups | length > 0
+    - item in getent_group
+
 - name: Restart ssh server
   ansible.builtin.service:
     name: "{{sshServiceName}}"
