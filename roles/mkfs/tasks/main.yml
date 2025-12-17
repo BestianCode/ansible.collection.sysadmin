@@ -1,0 +1,57 @@
+---
+- name: Install filesystem utilities
+  ansible.builtin.package:
+    name:
+      - e2fsprogs
+      - xfsprogs
+    state: present
+  when: ansible_facts['os_family'] == 'Debian'
+
+- name: Check if devices exist
+  ansible.builtin.stat:
+    path: "{{ item.device }}"
+  loop: "{{ newfs_devices }}"
+  register: device_stats
+  failed_when: not device_stats.stat.exists
+
+- name: Create filesystem on devices
+  community.general.filesystem:
+    fstype: "{{ item.fs }}"
+    dev: "{{ item.device }}"
+    force: false
+  ignore_errors: true
+  loop: "{{ newfs_devices }}"
+  register: fs_created
+
+- name: Create mountpoint directories
+  ansible.builtin.file:
+    path: "{{ item.mountpoint }}"
+    state: directory
+    mode: '0755'
+  loop: "{{ newfs_devices }}"
+
+- name: Get UUID of formatted devices
+  ansible.builtin.command:
+    cmd: "blkid -s UUID -o value {{ item.device }}"
+  loop: "{{ newfs_devices }}"
+  register: device_uuids
+  changed_when: false
+
+- name: Mount filesystems
+  ansible.posix.mount:
+    path: "{{ item.item.mountpoint }}"
+    src: "UUID={{ item.stdout }}"
+    fstype: "{{ item.item.fs }}"
+    opts: defaults
+    state: mounted
+  loop: "{{ device_uuids.results }}"
+  loop_control:
+    label: "{{ item.item.device }} -> {{ item.item.mountpoint }}"
+
+- name: Verify filesystems are mounted
+  ansible.builtin.command:
+    cmd: "mountpoint -q {{ item.mountpoint }}"
+  loop: "{{ newfs_devices }}"
+  changed_when: false
+  register: mount_check
+  failed_when: mount_check.rc != 0

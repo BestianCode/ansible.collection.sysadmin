@@ -32,16 +32,16 @@ ifconfig {{looppoint_int}} inet {{looppoint_int_ip}} netmask {{looppoint_int_mas
 {% endif %}
 {% if int_vlan is defined and int_mtu is defined %}
 
-ip link add link {{ansible_default_ipv4.interface}} name {{ansible_default_ipv4.interface}}.{{int_vlan}} type vlan id {{int_vlan}}
-ip link set {{ansible_default_ipv4.interface}}.{{int_vlan}} mtu {{int_mtu}}
-ip link set dev {{ansible_default_ipv4.interface}}.{{int_vlan}} up
+ip link add link {{ansible_facts['default_ipv4']['interface']}} name {{ansible_facts['default_ipv4']['interface']}}.{{int_vlan}} type vlan id {{int_vlan}}
+ip link set {{ansible_facts['default_ipv4']['interface']}}.{{int_vlan}} mtu {{int_mtu}}
+ip link set dev {{ansible_facts['default_ipv4']['interface']}}.{{int_vlan}} up
 {% endif %}
 {% if lan_net is defined and lan_net_full is defined and int_gw_last_octet is defined and lan_ip_last_octet is defined %}
 {% if int_vlan is defined %}
 
-ip addr add {{lan_net}}.{{lan_ip_last_octet}}/24 dev {{ansible_default_ipv4.interface}}.{{int_vlan}}
+ip addr add {{lan_net}}.{{lan_ip_last_octet}}/24 dev {{ansible_facts['default_ipv4']['interface']}}.{{int_vlan}}
 {% else %}
-ip addr add {{lan_net}}.{{lan_ip_last_octet}}/24 dev {{ansible_default_ipv4.interface}}
+ip addr add {{lan_net}}.{{lan_ip_last_octet}}/24 dev {{ansible_facts['default_ipv4']['interface']}}
 {% endif %}
 ip route add {{lan_net_full}} via {{lan_net}}.{{int_gw_last_octet}}
 {% endif %}

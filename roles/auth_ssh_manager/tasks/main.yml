@@ -96,7 +96,7 @@
   when:
     - managerName is defined
     - managerGroups | length > 0
-    - item in getent_group
+    - item in ansible_facts['getent_group']
 
 - name: Restart ssh server
   ansible.builtin.service:

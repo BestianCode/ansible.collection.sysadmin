@@ -1,0 +1,14 @@
+---
+
+# Default variables for newfs role
+
+# List of devices to format and mount
+# newfs_devices:
+#   - device: /dev/sda
+#     fs: ext4
+#     mountpoint: /data
+#   - device: /dev/sdb
+#     fs: xfs
+#     mountpoint: /backup
+
+newfs_devices: []
