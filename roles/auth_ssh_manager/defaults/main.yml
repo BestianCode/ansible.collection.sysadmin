@@ -24,6 +24,7 @@ managerGroup: admin
 managerGID: 1001
 managerUID: 1001
 managerGroups: []
+managerNameSudoersFileName: manager
 
 manager_ssh_keys: |
   ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIETHYQaEzZ/1ThEMdewhwkffTMBtw+hkqd4gut4Oze9l manager@ed.host
