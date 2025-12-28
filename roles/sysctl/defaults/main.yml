@@ -2,6 +2,11 @@
 
 rootGroup: root
 
+# If true, sysctl apply will ignore unknown/missing keys (uses `sysctl -e`).
+# This prevents failures on hosts where some kernel modules (e.g. nf_conntrack)
+# are not loaded / available.
+sysctl_apply_ignore_errors: true
+
 sysctl_params:
   - name: net.netfilter.nf_conntrack_max
     value: 65536

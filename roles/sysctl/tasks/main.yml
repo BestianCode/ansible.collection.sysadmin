@@ -7,5 +7,13 @@
     group: "{{ rootGroup }}"
     mode: '0644'
 
+- name: Try to load nf_conntrack module (if configured)
+  ansible.builtin.command: modprobe nf_conntrack
+  changed_when: false
+  failed_when: false
+  when: (sysctl_params | selectattr('name', 'equalto', 'net.netfilter.nf_conntrack_max') | list | length) > 0
+
 - name: Apply sysctl
-  command: sysctl -p /etc/sysctl.d/99-ansible-sysctl.conf
+  ansible.builtin.command: >-
+    sysctl{% if sysctl_apply_ignore_errors | default(true) %} -e{% endif %}
+    -p /etc/sysctl.d/99-ansible-sysctl.conf
