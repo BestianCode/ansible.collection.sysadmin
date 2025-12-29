@@ -63,7 +63,7 @@
     user: root
     key: "{{ root_ssh_keys }}"
     exclusive: yes
-  when: root_ssh_keys is defined
+  when: root_ssh_keys is defined and root_ssh_keys != ""
 
 - name: Add manager user to group 'root/wheel'
   user:
