@@ -1,10 +1,25 @@
 ---
 
+- name: Ensure primary group exists (optional fixed gid)
+  ansible.builtin.group:
+    name: "{{ item.username }}"
+    gid: >-
+      {{
+        item.gid
+        | default(item.uid | default(omit))
+      }}
+    state: present
+  loop: "{{ ssh_users_list }}"
+  loop_control:
+    label: "{{ item.username }}"
+  when: (item.state | default('present')) == 'present'
+
 - name: Manage user accounts
   ansible.builtin.user:
     name: "{{ item.username }}"
     comment: "{{ item.fullname | default('Managed by Ansible') }}"
     uid: "{{ item.uid | default(omit) }}"
+    group: "{{ item.username }}"
     groups: "{{ item.groups | join(',') if item.groups is defined else omit }}"
     # append: no # Default is no, which means groups will be set exactly to the list provided (plus primary group)
     shell: "{{ item.shell | default('/bin/bash') }}"
@@ -81,3 +96,12 @@
   when: >
     (item.state | default('present')) == 'absent' or
     item.sudo_commands is not defined
+
+- name: Remove primary group
+  ansible.builtin.group:
+    name: "{{ item.username }}"
+    state: absent
+  loop: "{{ ssh_users_list }}"
+  loop_control:
+    label: "{{ item.username }}"
+  when: (item.state | default('present')) == 'absent'

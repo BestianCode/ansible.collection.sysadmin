@@ -6,6 +6,7 @@ ssh_users_list: []
 #    home_root: /home/app # Optional, defaults to /home/${username}
 #    shell: /bin/bash     # Optional, defaults to /bin/bash
 #    uid: 1001            # Optional
+#    gid: 1001            # Optional, defaults to gid=uid when uid is set
 #    groups:              # Optional
 #      - sudo
 #      - docker
