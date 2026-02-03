@@ -86,6 +86,19 @@
     - (item.state | default('present')) == 'present'
     - item.sudo_commands is defined
 
+- name: Set ulimits for user
+  ansible.builtin.copy:
+    dest: "/etc/security/limits.d/900-{{ item.username }}.conf"
+    mode: "0644"
+    content: |
+      {{ item.username }} soft nofile {{ item.ulimits | default(1024000) }}
+      {{ item.username }} hard nofile {{ item.ulimits | default(1024000) }}
+  loop_control:
+    label: "{{ item.username }}"
+  when:
+    - (item.state | default('present')) == 'present'
+    - item.ulimits is defined
+
 - name: Remove sudoers configuration
   ansible.builtin.file:
     path: "/etc/sudoers.d/{{ item.username }}"
@@ -96,6 +109,17 @@
   when: >
     (item.state | default('present')) == 'absent' or
     item.sudo_commands is not defined
+
+- name: Remove ulimits configuration
+  ansible.builtin.file:
+    path: "/etc/security/limits.d/900-{{ item.username }}.conf"
+    state: absent
+  loop: "{{ ssh_users_list }}"
+  loop_control:
+    label: "{{ item.username }}"
+  when: >
+    (item.state | default('present')) == 'absent' or
+    item.ulimits is not defined
 
 - name: Remove primary group
   ansible.builtin.group:
