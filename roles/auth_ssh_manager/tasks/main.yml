@@ -20,6 +20,24 @@
     # ssh configs are usually installed by default to /etc on Linux and FreeBSD
     - { src: "sshd_config.j2",     dest: "/etc/ssh/sshd_config",      mode: "0644", owner: "root", group: "{{rootGroup}}", decrypt: "no" }
 
+- name: Check if /usr/bin/sudo exists
+  ansible.builtin.stat:
+    path: /usr/bin/sudo
+  register: sudo_bin
+  when: ansible_facts['os_family'] != 'FreeBSD'
+
+- name: Ensure /usr/bin/sudo is SUID root
+  ansible.builtin.file:
+    path: /usr/bin/sudo
+    owner: root
+    group: root
+    mode: '4755'
+    state: file
+  become: true
+  when:
+    - ansible_facts['os_family'] != 'FreeBSD'
+    - sudo_bin.stat.exists
+
 - name: Create manager user group
   group:
     name: "{{managerGroup}}"
