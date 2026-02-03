@@ -93,6 +93,7 @@
     content: |
       {{ item.username }} soft nofile {{ item.ulimits | default(1024000) }}
       {{ item.username }} hard nofile {{ item.ulimits | default(1024000) }}
+  loop: "{{ ssh_users_list }}"
   loop_control:
     label: "{{ item.username }}"
   when:
