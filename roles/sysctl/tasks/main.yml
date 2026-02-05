@@ -6,14 +6,18 @@
     owner: root
     group: "{{ rootGroup }}"
     mode: '0644'
+  when: ansible_facts['os_family'] not in ['FreeBSD']
 
 - name: Try to load nf_conntrack module (if configured)
   ansible.builtin.command: modprobe nf_conntrack
   changed_when: false
   failed_when: false
-  when: (sysctl_params | selectattr('name', 'equalto', 'net.netfilter.nf_conntrack_max') | list | length) > 0
+  when:
+    - (sysctl_params | selectattr('name', 'equalto', 'net.netfilter.nf_conntrack_max') | list | length) > 0
+    - ansible_facts['os_family'] not in ['FreeBSD']
 
 - name: Apply sysctl
   ansible.builtin.command: >-
     sysctl{% if sysctl_apply_ignore_errors | default(true) %} -e{% endif %}
     -p /etc/sysctl.d/99-ansible-sysctl.conf
+  when: ansible_facts['os_family'] not in ['FreeBSD']
