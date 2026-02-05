@@ -33,6 +33,7 @@
     mode: "0755"
     owner: root
     group: "{{ rootGroup }}"
+  when: ansible_facts['os_family'] != 'FreeBSD'
 
 - name: Deploy startup.sh
   ansible.builtin.template:
@@ -41,3 +42,4 @@
     mode: "0755"
     owner: root
     group: "{{ rootGroup }}"
+  when: ansible_facts['os_family'] != 'FreeBSD'
