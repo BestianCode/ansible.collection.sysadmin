@@ -99,7 +99,7 @@
   when:
     - (item.state | default('present')) == 'present'
     - item.ulimits is defined
-    - when ansible_facts['os_family'] != 'FreeBSD' # FreeBSD uses a different mechanism for user limits
+    - ansible_facts['os_family'] != 'FreeBSD' # FreeBSD uses a different mechanism for user limits
 
 - name: Remove sudoers configuration
   ansible.builtin.file:
@@ -120,9 +120,9 @@
   loop_control:
     label: "{{ item.username }}"
   when: >
-    (item.state | default('present')) == 'absent' or
-    item.ulimits is not defined
-    - when ansible_facts['os_family'] != 'FreeBSD'
+    ((item.state | default('present')) == 'absent' or
+    item.ulimits is not defined) and
+    ansible_facts['os_family'] != 'FreeBSD'
 
 - name: Remove primary group
   ansible.builtin.group:
