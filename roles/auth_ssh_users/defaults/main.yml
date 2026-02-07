@@ -1,5 +1,8 @@
 ---
 
+etcDirectory: /etc
+# FreeBSD: /usr/local/etc
+
 ssh_users_list: []
 #  - username: app        # Required
 #    fullname: App user   # Optional, defaults to 'Managed by Ansible'

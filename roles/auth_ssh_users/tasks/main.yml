@@ -72,7 +72,7 @@
 
 - name: Manage sudoers configuration for user
   ansible.builtin.copy:
-    dest: "/etc/sudoers.d/{{ item.username }}"
+    dest: "{{ etcDirectory }}/sudoers.d/{{ item.username }}"
     content: |
       {% for cmd in item.sudo_commands %}
       {{ item.username }} ALL=({{ cmd.run_as | default('root') }}) {{ 'NOPASSWD:' if cmd.nopasswd | default(true) else 'PASSWD:' }} {{ cmd.command }}
@@ -99,10 +99,11 @@
   when:
     - (item.state | default('present')) == 'present'
     - item.ulimits is defined
+    - when ansible_facts['os_family'] != 'FreeBSD' # FreeBSD uses a different mechanism for user limits
 
 - name: Remove sudoers configuration
   ansible.builtin.file:
-    path: "/etc/sudoers.d/{{ item.username }}"
+    path: "{{ etcDirectory }}/sudoers.d/{{ item.username }}"
     state: absent
   loop: "{{ ssh_users_list }}"
   loop_control:
@@ -121,6 +122,7 @@
   when: >
     (item.state | default('present')) == 'absent' or
     item.ulimits is not defined
+    - when ansible_facts['os_family'] != 'FreeBSD'
 
 - name: Remove primary group
   ansible.builtin.group:
