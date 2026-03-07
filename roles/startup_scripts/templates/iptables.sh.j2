@@ -5,7 +5,7 @@
 
 ipt4="/usr/sbin/iptables"
 ipt6="/usr/sbin/ip6tables"
-int=$(route -n | grep -E "0.0.0.0.*0.0.0.0" | awk '{ print $8 }')
+int=$(route -n | grep -E "0.0.0.0.*0.0.0.0" | awk '{ print $8 }' | head -n 1 )
 
 {% if always_allowed_hosts is defined and always_allowed_hosts | length > 0 %}
 ### Allow traffic from trusted hosts
