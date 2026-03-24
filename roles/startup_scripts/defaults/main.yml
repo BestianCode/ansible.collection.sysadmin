@@ -22,6 +22,8 @@ network_sh_commands: []
 # Zabbix agent port to protect
 zabbix_agent_port: 10050
 
+#iptables_flush: true
+
 # Always allowed hosts (IPv4 and IPv6 addresses)
 # IPv4 addresses will use iptables, IPv6 will use ip6tables
 # Example:

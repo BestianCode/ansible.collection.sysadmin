@@ -10,6 +10,11 @@ ipt4="/usr/sbin/iptables"
 ipt6="/usr/sbin/ip6tables"
 int=$(route -n | grep -E "0.0.0.0.*0.0.0.0" | awk '{ print $8 }' | head -n 1 )
 
+{% if iptables_flush is defined %}
+${ipt4} -F -v
+${ipt6} -F -v
+
+{% endif %}
 {% if always_allowed_hosts is defined and always_allowed_hosts | length > 0 %}
 ### Allow traffic from trusted hosts
 {% for host in always_allowed_hosts %}
