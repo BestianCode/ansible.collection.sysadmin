@@ -54,6 +54,15 @@
     state: present
   when: ansible_facts['os_family'] == 'FreeBSD'
 
+- name: Create additional groups for manager access
+  group:
+    name: "{{ item.name | default(item.group) }}"
+    system: no
+    gid: "{{ item.gid | default(omit) }}"
+    state: present
+  loop: "{{ managerGroupsCreate }}"
+  when: managerGroupsCreate | length > 0
+
 - name: Create manager user
   user:
     name: "{{managerName}}"
