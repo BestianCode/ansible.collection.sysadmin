@@ -26,9 +26,7 @@ managerUID: 1001
 managerGroups: []
 managerGroupsCreate: []
 #  - name: docker
-#    gid: 998
-#  - name: libvirt
-#    gid: 997
+#    gid: 988
 managerNameSudoersFileName: manager
 
 manager_ssh_keys: |
