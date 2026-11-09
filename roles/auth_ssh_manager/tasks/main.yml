@@ -125,6 +125,23 @@
     - managerGroups | length > 0
     - item in ansible_facts['getent_group']
 
+- name: Find active SSH sockets
+  ansible.builtin.command:
+    cmd: systemctl list-units --no-pager --no-legend --plain --type=socket --state=active ssh.socket sshd.socket
+  register: active_ssh_sockets
+  changed_when: false
+  check_mode: false
+  when: ansible_facts['service_mgr'] == 'systemd'
+
+- name: Reload systemd and restart active SSH sockets
+  ansible.builtin.systemd:
+    name: "{{ item.split()[0] }}"
+    daemon_reload: true
+    state: restarted
+  loop: "{{ active_ssh_sockets.stdout_lines | default([]) }}"
+  loop_control:
+    label: "{{ item.split()[0] }}"
+
 - name: Restart ssh server
   ansible.builtin.service:
     name: "{{sshServiceName}}"
